@@ -18,3 +18,12 @@ Sirius Shell handles commands with three steps:
 <li><b>Execute:</b> Run the parsed command.</li>
 </ul>
 </p>
+<h2>How to run</h2>
+<p>Open the terminal in your current working directory and do the following:</p>
+<pre>
+$./Sirius
+</pre>
+<p>After this you'll see the shell prompt.</p>
+<pre>
+Sirius>
+</pre>
