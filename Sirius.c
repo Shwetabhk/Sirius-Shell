@@ -4,11 +4,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <dirent.h>
+#include <errno.h>
 
 int Sirius_cd(char **args);
 int Sirius_help(char **args);
 int Sirius_exit(char **args);
 int Sirius_ls(char **args);
+int Sirius_execute(char ** args);
 
 char *builtin_str[] = {
   "cd",
@@ -16,6 +18,8 @@ char *builtin_str[] = {
   "help",
   "exit"
 };
+
+
 
 int (*builtin_func[]) (char **) = {
   &Sirius_cd,
@@ -97,16 +101,8 @@ int Sirius_ls( char **args)
 
 int Sirius_help(char **args)
 {
-  int i;
-  printf("Sirius Shell\n");
-  printf("Type program names and arguments, and hit enter.\n");
-  printf("The following are built in:\n");
-
-  for (i = 0; i < Sirius_num_builtins(); i++) {
-    printf("  %s\n", builtin_str[i]);
-  }
-
-  printf("Use the man command for information on other programs.\n");
+  args[0]="man";
+  Sirius_execute(args);
   return 1;
 }
 
@@ -151,7 +147,7 @@ int Sirius_execute(char **args)
   }
 
   for (i = 0; i < Sirius_num_builtins(); i++) {
-    if (strcmp(args[0], builtin_str[i]) == 0) {
+    if (strcmp(args[0], builtin_str[i]) == 0 ) {
       return (*builtin_func[i])(args);
     }
   }
@@ -237,9 +233,11 @@ void Sirius_loop(void)
   char *line;
   char **args;
   int status;
-
+  char cwd[1024];
+  
   do {
-    printf("Sirius> ");
+    getcwd(cwd, sizeof(cwd));
+    printf("Sirius (%s) $ ",cwd);
     line = Sirius_read_line();
     args = Sirius_split_line(line);
     status = Sirius_execute(args);
